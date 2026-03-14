@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Movie Detail Style Demo</title>
+  <title>Movie APK Style Demo</title>
   <style>
     * { box-sizing: border-box; }:root {
-  --bg: #f2f2f2;
+  --bg: #f4f4f4;
   --card: #ffffff;
   --text: #181818;
   --muted: #8a8a8a;
@@ -22,6 +22,10 @@ html, body {
   font-family: Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
+}
+
+body.no-scroll {
+  overflow: hidden;
 }
 
 a { color: inherit; }
@@ -84,7 +88,8 @@ a { color: inherit; }
   line-height: 1;
 }
 
-.home-wrap {
+.home-wrap,
+.category-wrap {
   padding: 16px;
 }
 
@@ -98,7 +103,35 @@ a { color: inherit; }
   outline: none;
   background: #fff;
   color: #111;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
+}
+
+.section {
+  margin-top: 18px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.see-all-btn {
+  border: 0;
+  background: transparent;
+  color: var(--red);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
 }
 
 .grid {
@@ -158,15 +191,18 @@ a { color: inherit; }
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: #ddd;
+  background: #000;
   overflow: hidden;
 }
 
+.hero-media,
+.hero video,
 .hero img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  background: #000;
 }
 
 .play-overlay {
@@ -186,6 +222,7 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 2;
 }
 
 .duration-badge {
@@ -198,6 +235,7 @@ a { color: inherit; }
   font-size: 13px;
   border-radius: 10px;
   font-weight: 700;
+  z-index: 2;
 }
 
 .detail-card {
@@ -266,52 +304,6 @@ a { color: inherit; }
   word-break: break-word;
 }
 
-.player-sheet {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.82);
-  z-index: 50;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-
-.player-sheet.show {
-  display: flex;
-}
-
-.player-box {
-  width: 100%;
-  max-width: 980px;
-  background: #000;
-  border-radius: 18px;
-  overflow: hidden;
-  position: relative;
-}
-
-.player-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 5;
-  border: 0;
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.16);
-  color: #fff;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-video {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  display: block;
-  background: #000;
-}
-
 .hint {
   background: #fff6f6;
   border: 1px solid #ffdada;
@@ -324,7 +316,8 @@ video {
 }
 
 @media (min-width: 721px) {
-  .home-wrap {
+  .home-wrap,
+  .category-wrap {
     max-width: 1200px;
     margin: 0 auto;
   }
@@ -359,14 +352,53 @@ video {
         <div class="topbar-left">
           <button class="icon-btn" type="button">☰</button>
         </div>
-        <div class="topbar-title">Movies</div>
+        <div class="topbar-title">Movies App</div>
         <div class="topbar-right">
           <button class="icon-btn" type="button">♡</button>
         </div>
       </div><div class="home-wrap">
     <input id="searchInput" class="search" type="text" placeholder="Search movie title..." />
-    <div id="movieGrid" class="grid"></div>
-    <div id="emptyState" class="empty">No movies found.</div>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-title">Movies</h2>
+        <button class="see-all-btn" type="button" data-category="movies">See All</button>
+      </div>
+      <div id="moviesGrid" class="grid"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-title">Series</h2>
+        <button class="see-all-btn" type="button" data-category="series">See All</button>
+      </div>
+      <div id="seriesGrid" class="grid"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-title">Adult</h2>
+        <button class="see-all-btn" type="button" data-category="adult">See All</button>
+      </div>
+      <div id="adultGrid" class="grid"></div>
+    </section>
+
+    <div id="homeEmpty" class="empty">No movies found.</div>
+  </div>
+</section>
+
+<section id="categoryScreen" class="screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button id="categoryBackBtn" class="icon-btn" type="button">←</button>
+    </div>
+    <div id="categoryTopTitle" class="topbar-title">Category</div>
+    <div class="topbar-right"></div>
+  </div>
+
+  <div class="category-wrap">
+    <div id="categoryGrid" class="grid"></div>
+    <div id="categoryEmpty" class="empty">No items in this category.</div>
   </div>
 </section>
 
@@ -384,7 +416,7 @@ video {
 
   <div class="detail-wrap">
     <div class="hero">
-      <img id="detailPoster" src="" alt="poster" />
+      <div id="heroMedia" class="hero-media"></div>
       <button id="heroPlayBtn" class="play-overlay" type="button">▶</button>
       <div id="durationBadge" class="duration-badge">40:00</div>
     </div>
@@ -399,41 +431,50 @@ video {
       </div>
 
       <div id="detailDesc" class="desc"></div>
-      <div class="hint">m3u8 / mp4 link တချို့မှာ source ဘက်က CORS သို့ hotlink block လုပ်ထားရင် browser player မဖွင့်နိုင်တာရှိနိုင်တယ်။</div>
+      <div class="hint">Watch နှိပ်ရင် နောက် popup မပေါ်ဘဲ အပေါ်က poster အကွက်ထဲမှာပဲ video တန်းပြမယ်။ m3u8 / mp4 link တချို့မှာ source ဘက်က CORS သို့ hotlink block လုပ်ထားရင် browser player မဖွင့်နိုင်တာရှိနိုင်တယ်။</div>
     </div>
   </div>
 </section>
 
-  </div>  <div id="playerSheet" class="player-sheet">
-    <div class="player-box">
-      <button id="playerCloseBtn" class="player-close" type="button">×</button>
-      <video id="videoPlayer" controls playsinline preload="metadata"></video>
-    </div>
   </div>  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>  <script>
     const homeScreen = document.getElementById('homeScreen');
+    const categoryScreen = document.getElementById('categoryScreen');
     const detailScreen = document.getElementById('detailScreen');
-    const movieGrid = document.getElementById('movieGrid');
-    const emptyState = document.getElementById('emptyState');
+
+    const moviesGrid = document.getElementById('moviesGrid');
+    const seriesGrid = document.getElementById('seriesGrid');
+    const adultGrid = document.getElementById('adultGrid');
+    const homeEmpty = document.getElementById('homeEmpty');
+
+    const categoryTopTitle = document.getElementById('categoryTopTitle');
+    const categoryGrid = document.getElementById('categoryGrid');
+    const categoryEmpty = document.getElementById('categoryEmpty');
+
     const searchInput = document.getElementById('searchInput');
+    const backBtn = document.getElementById('backBtn');
+    const categoryBackBtn = document.getElementById('categoryBackBtn');
 
     const detailTopTitle = document.getElementById('detailTopTitle');
-    const detailPoster = document.getElementById('detailPoster');
+    const heroMedia = document.getElementById('heroMedia');
+    const heroPlayBtn = document.getElementById('heroPlayBtn');
     const detailTitle = document.getElementById('detailTitle');
     const detailMeta = document.getElementById('detailMeta');
     const detailDesc = document.getElementById('detailDesc');
     const durationBadge = document.getElementById('durationBadge');
     const downloadBtn = document.getElementById('downloadBtn');
     const watchBtn = document.getElementById('watchBtn');
-    const backBtn = document.getElementById('backBtn');
-    const heroPlayBtn = document.getElementById('heroPlayBtn');
-
-    const playerSheet = document.getElementById('playerSheet');
-    const playerCloseBtn = document.getElementById('playerCloseBtn');
-    const videoPlayer = document.getElementById('videoPlayer');
 
     let allMovies = [];
     let currentMovie = null;
     let currentHls = null;
+    let previousScreen = 'home';
+    let currentCategory = 'movies';
+
+    const CATEGORY_LABELS = {
+      movies: 'Movies',
+      series: 'Series',
+      adult: 'Adult'
+    };
 
     async function loadMovies() {
       try {
@@ -442,58 +483,86 @@ video {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = JSON.parse(raw);
         if (!Array.isArray(data)) throw new Error('movies.json must be an array');
-        allMovies = data;
-        renderMovies(allMovies);
+        allMovies = data.map(normalizeMovie);
+        renderHomeSections(allMovies);
       } catch (err) {
         console.error(err);
-        emptyState.style.display = 'block';
-        emptyState.textContent = 'movies.json error: ' + err.message;
+        homeEmpty.style.display = 'block';
+        homeEmpty.textContent = 'movies.json error: ' + err.message;
       }
     }
 
-    function renderMovies(list) {
-      movieGrid.innerHTML = '';
+    function normalizeMovie(movie) {
+      const category = String(movie.category || 'movies').toLowerCase();
+      return {
+        ...movie,
+        category,
+        poster: movie.poster || movie.cover || '',
+        cover: movie.cover || movie.poster || '',
+        title: movie.title || 'Untitled',
+        description: movie.description || '',
+        year: movie.year || '',
+        genre: movie.genre || '',
+        duration: movie.duration || '40:00',
+        timeAgo: movie.timeAgo || '',
+        size: movie.size || ''
+      };
+    }
+
+    function renderHomeSections(list) {
+      const query = searchInput.value.trim().toLowerCase();
+      const filtered = list.filter(movie => {
+        const titleMatch = (movie.title || '').toLowerCase().includes(query);
+        return titleMatch;
+      });
+
+      renderCategoryPreview(moviesGrid, filtered.filter(x => x.category === 'movies').slice(0, 6));
+      renderCategoryPreview(seriesGrid, filtered.filter(x => x.category === 'series').slice(0, 6));
+      renderCategoryPreview(adultGrid, filtered.filter(x => x.category === 'adult').slice(0, 6));
+
+      const hasAny = filtered.length > 0;
+      homeEmpty.style.display = hasAny ? 'none' : 'block';
+    }
+
+    function renderCategoryPreview(container, list) {
+      container.innerHTML = '';
+      list.forEach(movie => {
+        container.appendChild(buildCard(movie));
+      });
+    }
+
+    function renderCategoryPage(category) {
+      currentCategory = category;
+      categoryTopTitle.textContent = CATEGORY_LABELS[category] || 'Category';
+      categoryGrid.innerHTML = '';
+
+      const list = allMovies.filter(movie => movie.category === category);
       if (!list.length) {
-        emptyState.style.display = 'block';
+        categoryEmpty.style.display = 'block';
         return;
       }
-      emptyState.style.display = 'none';
+      categoryEmpty.style.display = 'none';
+      list.forEach(movie => categoryGrid.appendChild(buildCard(movie)));
+    }
 
-      list.forEach(movie => {
-        const card = document.createElement('article');
-        card.className = 'card';
-        card.innerHTML = `
-          <img src="${escapeHtml(movie.poster || '')}" alt="${escapeHtml(movie.title || '')}">
-          <div class="card-body">
-            <h3 class="card-title">${escapeHtml(movie.title || '')}</h3>
-            <div class="card-meta">${buildCardMeta(movie)}</div>
-          </div>
-        `;
-        card.addEventListener('click', () => openDetail(movie));
-        movieGrid.appendChild(card);
-      });
+    function buildCard(movie) {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${escapeHtml(movie.poster || '')}" alt="${escapeHtml(movie.title || '')}">
+        <div class="card-body">
+          <h3 class="card-title">${escapeHtml(movie.title || '')}</h3>
+          <div class="card-meta">${escapeHtml(buildCardMeta(movie))}</div>
+        </div>
+      `;
+      card.addEventListener('click', () => openDetail(movie));
+      return card;
     }
 
     function buildCardMeta(movie) {
       const year = movie.year || '';
       const genre = movie.genre || '';
       return [year, genre].filter(Boolean).join(' • ');
-    }
-
-    function openDetail(movie) {
-      currentMovie = movie;
-      detailTopTitle.textContent = movie.category || 'Chinese';
-      detailPoster.src = movie.cover || movie.poster || '';
-      detailPoster.alt = movie.title || 'poster';
-      detailTitle.textContent = movie.title || '';
-      detailMeta.innerHTML = buildDetailMeta(movie);
-      detailDesc.textContent = movie.description || '';
-      durationBadge.textContent = movie.duration || '40:00';
-      downloadBtn.href = movie.download || movie.stream || '#';
-
-      homeScreen.classList.remove('active');
-      detailScreen.classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function buildDetailMeta(movie) {
@@ -507,10 +576,85 @@ video {
       return parts.join('<span class="dot">•</span>');
     }
 
-    function goHome() {
+    function showScreen(name) {
+      homeScreen.classList.remove('active');
+      categoryScreen.classList.remove('active');
       detailScreen.classList.remove('active');
-      homeScreen.classList.add('active');
-      closePlayer();
+
+      if (name === 'home') homeScreen.classList.add('active');
+      if (name === 'category') categoryScreen.classList.add('active');
+      if (name === 'detail') detailScreen.classList.add('active');
+    }
+
+    function openCategory(category) {
+      previousScreen = 'home';
+      renderCategoryPage(category);
+      showScreen('category');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openDetail(movie) {
+      previousScreen = categoryScreen.classList.contains('active') ? 'category' : 'home';
+      currentMovie = movie;
+
+      detailTopTitle.textContent = CATEGORY_LABELS[movie.category] || 'Movie';
+      detailTitle.textContent = movie.title || '';
+      detailMeta.innerHTML = buildDetailMeta(movie);
+      detailDesc.textContent = movie.description || '';
+      durationBadge.textContent = movie.duration || '40:00';
+      downloadBtn.href = movie.download || movie.stream || '#';
+
+      renderPosterHero(movie.cover || movie.poster || '', movie.title || 'poster');
+      showScreen('detail');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderPosterHero(src, alt) {
+      destroyPlayer();
+      heroMedia.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = src || '';
+      img.alt = alt || 'poster';
+      heroMedia.appendChild(img);
+      heroPlayBtn.style.display = 'flex';
+      document.body.classList.remove('no-scroll');
+    }
+
+    function playInHero(url) {
+      if (!url) return;
+      destroyPlayer();
+      heroMedia.innerHTML = '';
+
+      const video = document.createElement('video');
+      video.id = 'heroVideo';
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = 'metadata';
+      heroMedia.appendChild(video);
+
+      const lower = url.toLowerCase();
+      const isM3U8 = lower.includes('.m3u8');
+
+      if (isM3U8) {
+        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = url;
+        } else if (window.Hls && Hls.isSupported()) {
+          currentHls = new Hls();
+          currentHls.loadSource(url);
+          currentHls.attachMedia(video);
+        } else {
+          alert('ဒီ browser က m3u8 မထောက်ပံ့ဘူး။');
+          renderPosterHero((currentMovie && (currentMovie.cover || currentMovie.poster)) || '', (currentMovie && currentMovie.title) || 'poster');
+          return;
+        }
+      } else {
+        video.src = url;
+      }
+
+      heroPlayBtn.style.display = 'none';
+      setTimeout(() => {
+        video.play().catch(() => {});
+      }, 150);
     }
 
     function destroyPlayer() {
@@ -518,43 +662,22 @@ video {
         currentHls.destroy();
         currentHls = null;
       }
-      videoPlayer.pause();
-      videoPlayer.removeAttribute('src');
-      videoPlayer.load();
-    }
-
-    function openPlayer(url) {
-      if (!url) return;
-      destroyPlayer();
-      const lower = url.toLowerCase();
-      const isM3U8 = lower.includes('.m3u8');
-
-      if (isM3U8) {
-        if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-          videoPlayer.src = url;
-        } else if (window.Hls && Hls.isSupported()) {
-          currentHls = new Hls();
-          currentHls.loadSource(url);
-          currentHls.attachMedia(videoPlayer);
-        } else {
-          alert('ဒီ browser က m3u8 မထောက်ပံ့ဘူး။');
-          return;
-        }
-      } else {
-        videoPlayer.src = url;
+      const oldVideo = heroMedia.querySelector('video');
+      if (oldVideo) {
+        oldVideo.pause();
+        oldVideo.removeAttribute('src');
+        oldVideo.load();
       }
-
-      playerSheet.classList.add('show');
-      document.body.style.overflow = 'hidden';
-      setTimeout(() => {
-        videoPlayer.play().catch(() => {});
-      }, 150);
     }
 
-    function closePlayer() {
-      playerSheet.classList.remove('show');
-      document.body.style.overflow = '';
+    function goBack() {
       destroyPlayer();
+      if (previousScreen === 'category') {
+        showScreen('category');
+      } else {
+        showScreen('home');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function escapeHtml(text) {
@@ -566,28 +689,21 @@ video {
         .replaceAll("'", '&#039;');
     }
 
-    searchInput.addEventListener('input', () => {
-      const q = searchInput.value.trim().toLowerCase();
-      const filtered = allMovies.filter(movie =>
-        (movie.title || '').toLowerCase().includes(q)
-      );
-      renderMovies(filtered);
+    document.querySelectorAll('.see-all-btn').forEach(btn => {
+      btn.addEventListener('click', () => openCategory(btn.dataset.category));
     });
 
-    backBtn.addEventListener('click', goHome);
-    watchBtn.addEventListener('click', () => openPlayer((currentMovie && currentMovie.stream) || ''));
-    heroPlayBtn.addEventListener('click', () => openPlayer((currentMovie && currentMovie.stream) || ''));
-    playerCloseBtn.addEventListener('click', closePlayer);
-    playerSheet.addEventListener('click', (e) => {
-      if (e.target === playerSheet) closePlayer();
+    searchInput.addEventListener('input', () => {
+      renderHomeSections(allMovies);
     });
+
+    backBtn.addEventListener('click', goBack);
+    categoryBackBtn.addEventListener('click', () => showScreen('home'));
+    watchBtn.addEventListener('click', () => playInHero((currentMovie && currentMovie.stream) || ''));
+    heroPlayBtn.addEventListener('click', () => playInHero((currentMovie && currentMovie.stream) || ''));
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && playerSheet.classList.contains('show')) {
-        closePlayer();
-      } else if (e.key === 'Escape' && detailScreen.classList.contains('active')) {
-        goHome();
-      }
+      if (e.key === 'Escape' && detailScreen.classList.contains('active')) goBack();
     });
 
     loadMovies();
